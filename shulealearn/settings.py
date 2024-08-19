@@ -30,6 +30,16 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+REST_FRAMEWORK = {
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+    
+}
+
+AUTH_USER_MODEL='coreapi.User'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'coreapi'
+    'coreapi',
+     #tokenization
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
