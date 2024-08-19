@@ -32,3 +32,34 @@ class User(AbstractUser):
             return f"{self.first_name} {self.last_name} {self.type}"
         else :
             return f'{self.id}'
+        
+
+class Subject(models.Model):
+    name = models.CharField(max_length=100 )
+    def __str__(self):
+            return self.name
+
+class Post (models.Model):
+    post_code = models.CharField(max_length=50)
+    subject = models.ForeignKey('Subject' , on_delete=models.CASCADE)
+    question = models.TextField()
+    live_needed = models.BooleanField(default=False)
+    answered = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+
+class Bid(models.Model):
+    post = models.ForeignKey('Post' , on_delete=models.CASCADE)
+    tutor = models.ForeignKey(User , on_delete=models.CASCADE,  limit_choices_to={'type': 'Teacher'} )
+    credits = models.IntegerField(default=0.00)
+    accepted = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+
+class Resource (models.Model):
+    post = models.ForeignKey('Post' , on_delete=models.CASCADE)
+    tutor = models.ForeignKey(User , on_delete=models.CASCADE,  limit_choices_to={'type': 'Teacher'} )
+    created = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+    text_resource = models.TextField()
+    #doc resource here
+    #meeting link , #youtube links can be attached also
+
+
