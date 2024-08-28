@@ -15,11 +15,11 @@ class User(AbstractUser):
     gender = models.CharField(max_length=50)
 
     type_Choices = (
-        ('Tutor' , 'Teacher'),
+        ('Tutor' , 'Tutor'),
         ('Learner', 'Learner'),
 
     )
-    type = models.CharField(max_length =20 ,choices =type_Choices, default= "teacher")
+    type = models.CharField(max_length =20 ,choices =type_Choices, default="Tutor")
     reset_password_token = models.CharField(max_length=255, blank=True, null=True)
     reset_password_token_created_at = models.DateTimeField(blank=True, null=True)
 
