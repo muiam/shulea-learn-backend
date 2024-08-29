@@ -11,7 +11,15 @@ urlpatterns = [
     path('auth/register/tutor', views.RegisterTutor.as_view(), name='register_tutor'),
 
     #register learner
-
     path('auth/register/learner', views.RegisterLearner.as_view(), name='register_learner'),
+
+    #make a post
+    path('post/create', views.CreateAPost.as_view() ),
+
+    #get student posts
+
+    path('posts/all', views.CreateAPost.as_view() ),
+
+
     
 ]

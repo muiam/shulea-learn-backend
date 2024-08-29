@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User
+from .models import User , Post
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -60,3 +60,20 @@ class RegisterLearnerSerializer(serializers.ModelSerializer):
             user.set_password(validated_data['password'])
             # user.save()
             return user
+
+class CreateAPostSerializer(serializers.ModelSerializer):
+     
+     class Meta:
+          model = Post
+          fields = ['post_code', 'subject', 'question', 'live_needed' ]
+
+
+class PostSerializer(serializers.ModelSerializer):
+    subject_name = serializers.SerializerMethodField()
+     
+    class Meta:
+          model = Post
+          fields = '__all__'
+
+    def get_subject_name (self, obj):
+         return obj.subject.name

@@ -1,7 +1,8 @@
 from django.shortcuts import render
 
+from coreapi.models import Post, User
 from shulealearn import settings
-from . serializers import MyTokenObtainPairSerializer, RegisterLearnerSerializer
+from . serializers import MyTokenObtainPairSerializer, PostSerializer, RegisterLearnerSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsLearner, IsTutor
 from django.core.mail import send_mail , EmailMultiAlternatives
 from django.template.loader import render_to_string
-from . serializers import RegisterTutorSerializer
+from . serializers import RegisterTutorSerializer, RegisterLearnerSerializer, CreateAPostSerializer
 from django.utils.html import strip_tags
 from rest_framework import status
 # Create your views here.
@@ -21,7 +22,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #register student
 class RegisterTutor(APIView):
     def post(self, request, format=None):
-        serializer = RegisterLearnerSerializer(data=request.data, context={'request': request})
+        serializer = RegisterTutorSerializer(data=request.data, context={'request': request})
         
         if serializer.is_valid():
             try:
@@ -100,6 +101,30 @@ class RegisterLearner(APIView):
         # Return validation errors if serializer is not valid
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+    # learner creates a post
+
+class CreateAPost(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsLearner]
+    serializer_class = CreateAPostSerializer
+    def post (self , request , format = None):
+        serializer = CreateAPostSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = User.objects.get(id = request.user)
+            post= serializer.save(owner=user)
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    def get (self , request):
+        user = User.objects.get(id = request.user.id)
+        all_posts = Post.objects.filter(owner = user)
+        serialized_data = PostSerializer(all_posts, many = True)
+        return Response(serialized_data.data , status=status.HTTP_200_OK)
     
 
 
