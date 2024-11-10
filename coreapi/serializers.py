@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User , Post
+from .models import Bid, LearningClass, Resource, User , Post
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -77,3 +77,34 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_subject_name (self, obj):
          return obj.subject.name
+    
+class BidSerializer(serializers.ModelSerializer): 
+    question = serializers.SerializerMethodField()
+    class Meta:
+          model = Bid
+          fields = '__all__'
+    def get_question (self, obj):
+         return obj.post.question
+
+
+class ResourceSerializer(serializers.ModelSerializer):
+     post = serializers.SerializerMethodField()
+     tutor = serializers.SerializerMethodField()
+     class Meta:
+          model = Resource
+          fields = '__all__'
+      
+     def get_post(self, obj):
+          return obj.post.id
+     def get_tutor(self, obj):
+          return obj.tutor.id
+     
+
+class ClassSerializer(serializers.ModelSerializer):
+     owner = serializers.SerializerMethodField()
+     class Meta:
+          model = LearningClass
+          fields = '__all__'
+
+     def get_owner(self, obj):
+          return obj.owner.id
